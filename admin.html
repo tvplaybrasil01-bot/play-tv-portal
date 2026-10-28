@@ -1,6 +1,49 @@
 <!doctype html>
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07152e"><title>Administração | PLAY TV</title><link rel="stylesheet" href="styles.css"><style>
-.admin-shell{max-width:650px;margin:7vh auto;padding:24px}.admin-card{background:#0b1830;border:1px solid var(--line);border-radius:20px;padding:clamp(22px,5vw,40px)}.admin-logo{width:90px;height:90px;object-fit:cover;border-radius:50%;display:block;margin-bottom:22px}.admin-card h1{font-family:Manrope,sans-serif}.admin-card p{color:var(--muted);font-size:13px}.admin-card label{display:block;font-size:12px;margin:16px 0 7px}.admin-card input{width:100%;padding:13px;background:#050b17;border:1px solid #294566;border-radius:10px;color:white;font:inherit}.warning{font-size:11px!important;color:#ffcc8a!important}.status{margin-top:16px;font-size:12px;color:#9ec9ff}.back{display:inline-block;margin-top:20px;color:var(--cyan);font-size:13px}
-</style></head><body><main class="admin-shell"><div class="admin-card"><img class="admin-logo" src="/play-tv-logo-original.jpg" alt="PLAY TV"><p class="eyebrow">ÁREA RESTRITA</p><h1>Painel administrativo</h1><p>Este é o ponto de entrada visual do painel. A autenticação e as funções de edição só devem ser ativadas depois que a API protegida for configurada no Cloudflare.</p><label for="adminPassword">Senha administrativa</label><input id="adminPassword" type="password" autocomplete="current-password" placeholder="Digite sua senha"><button id="login" class="button primary full" type="button">Entrar no painel</button><div id="status" class="status" role="status">Modo inicial: autenticação ainda não conectada à API.</div><p class="warning">Não informe sua senha aqui enquanto a API não estiver configurada. Esta página inicial não autentica nem armazena credenciais.</p><a class="back" href="index.html">← Voltar ao portal público</a></div></main><script>
-document.getElementById('login').addEventListener('click',()=>{document.getElementById('status').textContent='A autenticação ainda não está configurada. Não digite nem envie sua senha nesta versão inicial.';document.getElementById('adminPassword').value='';});
-</script></body></html>
+
+<html lang="pt-BR">  
+<head>  
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">  
+<meta name="theme-color" content="#07152e"><title>Administração | PLAY TV</title>  
+<link rel="stylesheet" href="styles.css">  
+<style>  
+.admin-shell{max-width:850px;margin:28px auto;padding:18px}.admin-card{background:#0b1830;border:1px solid var(--line);border-radius:20px;padding:clamp(20px,4vw,36px);margin-bottom:18px}.admin-card h1,.admin-card h2{font-family:Manrope,sans-serif}.admin-card p,.hint{color:var(--muted);font-size:13px}.admin-logo{width:72px;height:72px;object-fit:cover;border-radius:50%}.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:grid;gap:6px}.field.fullrow{grid-column:1/-1}.field label{font-size:12px;color:#b9cbe2}.field input,.field textarea{width:100%;padding:12px;background:#050b17;border:1px solid #294566;border-radius:10px;color:white;font:inherit}.field textarea{min-height:85px;resize:vertical}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.status{font-size:13px;margin-top:14px;color:#9ec9ff;overflow-wrap:anywhere}.hidden{display:none!important}.back{display:inline-block;margin-top:14px;color:var(--cyan)}@media(max-width:600px){.field-grid{grid-template-columns:1fr}.field.fullrow{grid-column:auto}}  
+</style></head>  
+<body>  
+<main class="admin-shell">  
+<section class="admin-card">  
+<img class="admin-logo" src="play-tv-logo-original.jpg" alt="PLAY TV">  
+<p class="eyebrow">ÁREA RESTRITA</p><h1>Painel administrativo</h1>  
+<p>Use a senha configurada como segredo <code>ADMIN_PASSWORD</code> no Worker Cloudflare <code>play-tv-gestor-api</code>. Não digite a senha até publicar a API atualizada.</p>  
+<div class="field-grid">  
+<div class="field"><label for="username">Usuário (identificação)</label><input id="username" value="Admin" autocomplete="username"></div>  
+<div class="field"><label for="password">Senha administrativa</label><input id="password" type="password" autocomplete="current-password" placeholder="Senha do segredo Cloudflare"></div>  
+</div>  
+<div class="actions"><button class="button primary" id="login" type="button">Entrar</button><button class="button secondary hidden" id="logout" type="button">Sair</button></div>  
+<div id="status" class="status" role="status">Aguardando login.</div>  
+</section>  
+<section id="editor" class="admin-card hidden">  
+<p class="eyebrow">CONTEÚDO DO PORTAL</p><h2>Editar informações principais</h2>  
+<p>Altere os campos e salve. As mudanças suportadas aparecerão no site público após atualizar a página.</p>  
+<div class="field-grid">  
+<div class="field fullrow"><label for="hero_title">Título principal</label><input id="hero_title" data-key="hero_title"></div>  
+<div class="field fullrow"><label for="hero_intro">Descrição principal</label><textarea id="hero_intro" data-key="hero_intro"></textarea></div>  
+<div class="field"><label for="plan_price">Preço mensal (número)</label><input id="plan_price" data-key="plan_price" inputmode="decimal"></div>  
+<div class="field"><label for="whatsapp">WhatsApp com DDI (só números)</label><input id="whatsapp" data-key="whatsapp" inputmode="numeric"></div>  
+<div class="field"><label for="plan_label">Nome do plano</label><input id="plan_label" data-key="plan_label"></div>  
+<div class="field"><label for="contact_title">Título da área de contato</label><input id="contact_title" data-key="contact_title"></div>  
+<div class="field fullrow"><label for="contact_text">Texto da área de contato</label><textarea id="contact_text" data-key="contact_text"></textarea></div>  
+</div>  
+<div class="actions"><button class="button primary" id="save" type="button">Salvar alterações</button><button class="button secondary" id="reload" type="button">Recarregar dados</button></div>  
+<a class="back" href="index.html">← Voltar ao portal público</a>  
+</section></main>  
+<script>  
+const API="https://play-tv-gestor-api.tvplaybrasil01.workers.dev";  
+const $=id=>document.getElementById(id);let token="";  
+function status(message,bad=false){$("status").textContent=message;$("status").style.color=bad?"#ff9d9d":"#9ec9ff";}  
+async function api(path,options={}){const response=await fetch(API+path,{...options,headers:{"Content-Type":"application/json",...(token?{"Authorization":"Bearer "+token}:{}),...(options.headers||{})}});const body=await response.json().catch(()=>({erro:"Resposta inválida da API."}));if(!response.ok)throw new Error(body.erro||"Falha na solicitação ("+response.status+").");return body;}  
+async function loadConfig(){const data=await api("/site-config");const defaults={hero_title:"Seu próximo programa favorito começa aqui.",hero_intro:"Conheça a PLAY TV, explore as categorias disponíveis e consulte as condições para contratar seu plano.",plan_price:"35",whatsapp:"5531993177883",plan_label:"PLANO MENSAL",contact_title:"Vamos encontrar a melhor opção para você?",contact_text:"Converse com nossa equipe, tire suas dúvidas e confirme as condições do plano."};const c={...defaults,...(data.configuracoes||{})};document.querySelectorAll("[data-key]").forEach(el=>el.value=c[el.dataset.key]??"");}  
+$("login").addEventListener("click",async()=>{const password=$("password").value;if(!password){status("Digite a senha administrativa.",true);return;}token=password;$("login").disabled=true;status("Verificando acesso…");try{await loadConfig();$("editor").classList.remove("hidden");$("logout").classList.remove("hidden");$("password").value="";status("Acesso validado. Você pode editar os campos.");}catch(e){token="";status(e.message,true);}finally{$("login").disabled=false;}});  
+$("save").addEventListener("click",async()=>{const data={};document.querySelectorAll("[data-key]").forEach(el=>data[el.dataset.key]=el.value.trim());if(!/^\d{8,15}$/.test(data.whatsapp)){status("WhatsApp inválido: use números com código do país.",true);return;}if(!/^\d+([.,]\d{1,2})?$/.test(data.plan_price)){status("Informe um preço válido, como 35 ou 35,90.",true);return;}data.plan_price=data.plan_price.replace(",",".");$("save").disabled=true;try{const result=await api("/site-config",{method:"PUT",body:JSON.stringify(data)});status(result.mensagem+" Atualize o portal para conferir.");}catch(e){status(e.message,true);}finally{$("save").disabled=false;}});  
+$("reload").addEventListener("click",async()=>{try{await loadConfig();status("Dados recarregados.");}catch(e){status(e.message,true);}});  
+$("logout").addEventListener("click",()=>{token="";$("editor").classList.add("hidden");$("logout").classList.add("hidden");$("password").value="";status("Você saiu do painel.");});  
+</script></body></html>  
